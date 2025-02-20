@@ -4,3 +4,6 @@ to pull the ip and stuff just run it via console of ur browser. or like code it 
 
 # WebHack
 A local storage and Cookie editor.
+
+# WebHack V2
+Same as WebHack V1 but with Network requests kinda working
