@@ -1,6 +1,5 @@
 (() => {
-    console.log (WEBHACK V2)
-
+    
     const container = document.createElement('div');
     container.style.position = 'fixed';
     container.style.bottom = '10px';
@@ -22,10 +21,13 @@
         <button style="background: #333; color: white; border: 1px solid #555;" onclick="loadCookies()">Load Cookies</button>
         <button style="background: #333; color: white; border: 1px solid #555;" onclick="clearCookies()">Clear Cookies</button>
         <br><br>
-        <button style="background: #333; color: white; border: 1px solid #555;" onclick="sendRequest()">Send Request</button>
+        <button style="background: #333; color: white; border: 1px solid #555;" onclick="sendCustomData()">Send Custom Request</button>
         <br><br>
         <button style="background: #333; color: white; border: 1px solid #555;" onclick="startMonitor()">Start Network Monitor</button>
         <button style="background: #333; color: white; border: 1px solid #555;" onclick="exportNetworkData()">Export & Stop Monitor</button>
+        <br><br>
+        <button style="background: #333; color: white; border: 1px solid #555;" onclick="viewStorage()">View LocalStorage & Cookies</button>
+        <button style="background: #333; color: white; border: 1px solid #555;" onclick="clearAllData()">Clear All Data</button>
         <br>
         <button style="background: #333; color: white; border: 1px solid #555;" id="hideButton">Hide</button>
     `;
@@ -53,78 +55,39 @@
         toggleButton.style.display = 'block';
     };
 
-    let networkLogs = [];
-
-    window.startMonitor = function() {
-        if (window.networkObserver) return;
-        networkLogs = [];
-        window.networkObserver = new PerformanceObserver((list) => {
-            list.getEntries().forEach(entry => {
-                networkLogs.push({
-                    url: entry.name,
-                    time: new Date().toLocaleString()
-                });
-            });
-        });
-        window.networkObserver.observe({ entryTypes: ['resource'] });
-        alert('Network monitoring started.');
-    };
-
-    window.exportNetworkData = function() {
-        if (!window.networkObserver) return;
-        window.networkObserver.disconnect();
-        window.networkObserver = null;
-
-        const blob = new Blob([JSON.stringify(networkLogs, null, 2)], { type: 'application/json' });
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = 'network_logs.json';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        alert('Network monitoring stopped. Data exported.');
-    };
-
-    window.saveLocalStorage = function() {
-        localStorage.setItem('data', prompt('Enter Local Storage Data:'));
-        alert('Local storage saved!');
+    window.viewStorage = function() {
+        alert(`LocalStorage: ${JSON.stringify(localStorage, null, 2)}\n\nCookies: ${document.cookie}`);
     };
     
-    window.loadLocalStorage = function() {
-        alert('Local Storage: ' + (localStorage.getItem('data') || 'No data'));
-    };
-    
-    window.clearLocalStorage = function() {
+    window.clearAllData = function() {
         localStorage.clear();
-        alert('Local storage cleared!');
+        document.cookie.split(';').forEach(cookie => {
+            document.cookie = cookie.replace(/^ +/, '').replace(/=.*/, '=;expires=' + new Date().toUTCString() + ';path=/');
+        });
+        alert('All storage and cookies cleared!');
     };
-    
-    window.saveCookies = function() {
-        document.cookie = `data=${prompt('Enter Cookie Data:')}; path=/`;
-        alert('Cookie saved!');
-    };
-    
-    window.loadCookies = function() {
-        let match = document.cookie.match(/data=([^;]*)/);
-        alert('Cookies: ' + (match ? match[1] : 'No data'));
-    };
-    
-    window.clearCookies = function() {
-        document.cookie = 'data=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/';
-        alert('Cookie cleared!');
-    };
-    
-    window.sendRequest = function() {
+
+    window.sendCustomData = function() {
         let url = prompt('Enter Request URL:');
+        let method = prompt('Enter Request Method (GET, POST, etc.):', 'POST');
+        let headers = prompt('Enter Headers as JSON (Optional):', '{}');
         let body = prompt('Enter Request Body (Optional):');
         
+        try {
+            headers = JSON.parse(headers);
+        } catch (e) {
+            alert('Invalid headers JSON');
+            return;
+        }
+        
         fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: body ? JSON.stringify({ data: body }) : null
+            method: method.toUpperCase(),
+            headers: headers,
+            body: method.toUpperCase() !== 'GET' && body ? JSON.stringify(body) : null
         })
         .then(response => response.text())
         .then(data => alert('Response: ' + data))
         .catch(error => alert('Error: ' + error));
     };
+
 })();
